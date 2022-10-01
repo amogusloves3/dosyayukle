@@ -1,70 +1,71 @@
-const express = require('express');
-const multer = require('multer');
-const ejs = require('ejs');
-const path = require('path');
-const Darkmode = require('darkmode-js');
-const requestIp = require('request-ip');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+ 
+  <title>www.dosyaykl.tk</title>
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Cloud_upload_font_awesome.svg/512px-Cloud_upload_font_awesome.svg.png" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-const app = express();
-const port = 3000;
+  <style>
+    .center {
+      margin: auto;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <div class="container">
+    <div class="center">
+      <h1>!Dosya Yükle!</h1>
+    </div>
+   
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <div class="file-field input-field">
+        <div class="btn orange">
+          <span>Yükle!</span>
+          <input name="dosya" type="file">
+        </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text">
+        </div>
+      </div>
+      <button type="submit" class="btn">Başlat!</button>
+    </form>
+    <br>
+      <a target="_blank" href="<%= typeof url != 'undefined' ? url : '' %>"><%= typeof url != 'undefined' ? url : '' %></a>
+  </div>
 
-app.set('view engine', 'ejs');
-app.use("/files", express.static('./src/files'));
-app.use(requestIp.mw());
-app.set("views", path.join(__dirname, "src/views"));
 
-const storage = multer.diskStorage({
-  destination: './src/files/',
-  filename: function(req, file, cb){
-    cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
-
-
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 100000000 },
-  // fileFilter: function(req, file, cb){
-  //   checkFileType(file, cb);
-  // }
-}).single('file');
-
-
-// function checkFileType(file, cb){
-//   const filetypes = /jpeg|jpg|png|gif|mp3|mkv|mp4/;
-//   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-//   const mimetype = filetypes.test(file.mimetype);
-//   if(mimetype && extname){
-//     return cb(null,true);
-//   } else {
-//     cb('Hata sadece resim!');
-//   }
-// }
-
-app.get('/', (req, res) => res.render('index'));
-
-app.post('/upload', (req, res) => {
-  //new Darkmode().showWidget();
-  upload(req, res, (err) => {
-    if(err){
-      res.render('index', {
-        msg: 'Dosya büyük'
-      });
-    } else {
-      if(req.file == undefined){
-        res.render('index', {
-          msg: 'Dosya seçili değil'
-        });
-      } else {
-        console.log(`${req.file.filename} adlı dosya yüklendi`);
-        res.render('index', {
-          msg: 'Dosya Yüklendi!',
-          file: `src/files/${req.file.filename}`,
-          url: `https://hexagonal-snowy-roadway.glitch.me/files/${req.file.filename}`
-        });
-      };
-    };
-  });
-});
-
-app.listen(port, () => console.log(`${port} Portundan başladı`));
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>  
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
+  <script type="text/javascript">
+    function IE(e) {
+      if (navigator.appName == "Microsoft Internet Explorer" && (event.button == "2" || event.button == "3")) {
+        Toastify({ text: `Sağtık Engellendi!`, duration: 3000, style: { background: "linear-gradient(to right, #00b09b, #96c93d)" } }).showToast();
+        return false;
+      }
+    }
+    function NS(e) {
+      if (document.layers || (document.getElementById && !document.all)) {
+        if (e.which == "2" || e.which == "3") {
+          Toastify({ text: `Sağtık Engellendi!`, duration: 3000, style: { background: "linear-gradient(to right, #00b09b, #96c93d)" } }).showToast();
+          return false;
+        }
+      }
+    }
+    document.onmousedown=IE;document.onmouseup=NS;document.oncontextmenu=new Function("return false");
+    $(function(){
+      $(document).on("keydown",window,function(a){
+        if (a.which == 123) return false;
+      })
+    })
+    new Darkmode().showWidget();
+  </script>
+</body>
+</html>
